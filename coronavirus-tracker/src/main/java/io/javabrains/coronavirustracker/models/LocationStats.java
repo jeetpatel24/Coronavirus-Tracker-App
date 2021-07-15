@@ -3,7 +3,8 @@ package io.javabrains.coronavirustracker.models;
 public class LocationStats {
     private String state;
     private String country;
-    private String latestTotalCases;
+    private long latestTotalCases;
+    private long diffFromPrevDay;
 
     public String getState() {
         return state;
@@ -21,12 +22,20 @@ public class LocationStats {
         this.country = country;
     }
 
-    public String getLatestTotalCases() {
+    public long getLatestTotalCases() {
         return latestTotalCases;
     }
 
-    public void setLatestTotalCases(String latestTotalCases) {
+    public void setLatestTotalCases(long latestTotalCases) {
         this.latestTotalCases = latestTotalCases;
+    }
+
+    public long getDiffFromPrevDay() {
+        return diffFromPrevDay;
+    }
+
+    public void setDiffFromPrevDay(long diffFromPrevDay) {
+        this.diffFromPrevDay = diffFromPrevDay;
     }
 
     @Override

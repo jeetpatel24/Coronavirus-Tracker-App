@@ -24,12 +24,17 @@ public class CoronavirusDataService {
 
     ArrayList<LocationStats> allStats = new ArrayList<>();
 
+    public ArrayList<LocationStats> getAllStats() {
+        return allStats;
+    }
+
     @PostConstruct  //comment1
-    //@Scheduled(cron = "0 10,11,12,13 * *")  //comment2
     @Scheduled(cron = "* * * * * *")
     public void fetchVirusData() throws IOException, InterruptedException {
 
         ArrayList<LocationStats> newStats = new ArrayList<>();
+
+
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -44,11 +49,13 @@ public class CoronavirusDataService {
             LocationStats locationStats = new LocationStats();
             String state = record.get("Province/State");
             String country = record.get("Country/Region");
-            String latestTotalCases = record.get(record.size()-1);
+            long latestTotalCases = Integer.parseInt(record.get(record.size()-1));
+            long prevDayCases = Integer.parseInt(record.get(record.size()-2));
 
             locationStats.setState(state);
             locationStats.setCountry(country);
             locationStats.setLatestTotalCases(latestTotalCases);
+            locationStats.setDiffFromPrevDay(latestTotalCases - prevDayCases);
 
             newStats.add(locationStats);
         }
@@ -62,7 +69,7 @@ public class CoronavirusDataService {
 //tells spring to execute this method when the application starts
 
 
-//comment2
+////@Scheduled(cron = "0 10,11,12,13 * *")  //comment2
 /* cron = "<minute> <hour> <day-of-month> <month> <day-of-week>"
     cron = ("0 10,11,12,13 * *") --> 0th minute of 10 to 1 pm of every day of every month of every day of week
     tells spring to run this method on scheduled basis, since the data in the csv file will get updated on daily basis
